@@ -1,0 +1,371 @@
+/* ============================================================
+   Аматорская футбольная лига — единые стили (UI-kit из отчёта 6)
+   ============================================================ */
+:root {
+    --primary: #1E3A8A;
+    --primary-hover: #1E40AF;
+    --primary-active: #172554;
+    --secondary: #3B82F6;
+    --accent: #C8102E;
+    --bg: #F8FAFC;
+    --text: #1F2937;
+    --text-secondary: #4B5563;
+    --success: #15803D;
+    --warning: #B45309;
+    --warning-bg: #FEF3C7;
+    --error: #B91C1C;
+    --error-bg: #FEF2F2;
+    --white: #FFFFFF;
+    --border: #E5E7EB;
+
+    --radius: 12px;
+    --base-gap: 24px;
+    --section-gap: 48px;
+    --container: 1280px;
+    --page-pad: 80px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: "Inter", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--text);
+    background-color: var(--bg);
+}
+
+h1, h2, h3 {
+    font-family: "Montserrat", Arial, sans-serif;
+    line-height: 1.2;
+}
+h1 { font-size: 32px; font-weight: 700; }
+h2 { font-size: 24px; font-weight: 600; }
+h3 { font-size: 20px; font-weight: 600; }
+
+.container {
+    max-width: var(--container);
+    margin: 0 auto;
+    padding: 0 var(--page-pad);
+}
+
+/* ---------- Шапка ---------- */
+.site-header {
+    background-color: var(--primary);
+    color: var(--white);
+    padding: 16px 0;
+}
+.header-inner {
+    display: flex;
+    align-items: center;
+    gap: var(--base-gap);
+}
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--white);
+    text-decoration: none;
+    font-family: "Montserrat", Arial, sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 1.15;
+}
+.logo-mark {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: conic-gradient(var(--secondary) 0 50%, var(--white) 50% 100%);
+    flex-shrink: 0;
+}
+.site-nav ul {
+    display: flex;
+    gap: var(--base-gap);
+    list-style: none;
+}
+.site-nav a {
+    color: var(--white);
+    text-decoration: none;
+    font-size: 14px;
+    padding: 8px 4px;
+    border-bottom: 2px solid transparent;
+}
+.site-nav a:hover { border-bottom-color: var(--secondary); }
+.header-actions {
+    margin-left: auto;
+    display: flex;
+    gap: 12px;
+}
+
+/* ---------- Кнопки ---------- */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    border: 2px solid transparent;
+    cursor: pointer;
+    min-height: 40px;
+    text-align: center;
+}
+.btn-primary { background-color: var(--primary); color: var(--white); }
+.btn-primary:hover { background-color: var(--primary-hover); }
+.btn-primary:active { background-color: var(--primary-active); }
+.btn-outline {
+    background-color: transparent;
+    color: var(--white);
+    border-color: var(--white);
+}
+.btn-outline:hover { background-color: rgba(255, 255, 255, 0.12); }
+.btn-outline:active { background-color: rgba(255, 255, 255, 0.22); }
+.btn-white { background-color: var(--white); color: var(--primary); }
+.btn-white:hover { background-color: #EFF3FB; }
+.btn-lg { padding: 14px 28px; font-size: 16px; }
+
+/* ---------- Hero ---------- */
+.hero {
+    background: linear-gradient(120deg, var(--primary) 0%, var(--primary-active) 100%);
+    color: var(--white);
+    padding: 72px 0 80px;
+}
+.hero-inner {
+    display: flex;
+    align-items: center;
+    gap: var(--section-gap);
+}
+.hero-text { flex: 1 1 60%; }
+.hero-eyebrow {
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #BFDBFE;
+    margin-bottom: 12px;
+}
+.hero h1 { max-width: 640px; }
+.hero-lead {
+    margin-top: 16px;
+    max-width: 560px;
+    font-size: 18px;
+    color: #DBEAFE;
+}
+.hero-actions {
+    margin-top: 32px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+.hero-card {
+    flex: 1 1 340px;
+    background-color: var(--white);
+    color: var(--text);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+}
+.hero-card-title {
+    font-family: "Montserrat", Arial, sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+}
+.hero-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+}
+.hero-row:last-child { border-bottom: none; }
+.hero-row-accent { color: var(--accent); font-weight: 500; }
+
+/* ---------- Секции и карточки ---------- */
+.section { padding: var(--section-gap) 0; }
+.section-alt { background-color: var(--white); }
+.section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: var(--base-gap);
+}
+.link-more {
+    color: var(--secondary);
+    text-decoration: none;
+    font-size: 14px;
+}
+.link-more:hover { text-decoration: underline; }
+
+.cards-grid {
+    display: flex;
+    gap: var(--base-gap);
+    flex-wrap: wrap;
+}
+.card {
+    background-color: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(31, 41, 55, 0.06);
+}
+.tournament-card {
+    flex: 1 1 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.card-meta {
+    color: var(--text-secondary);
+    font-size: 14px;
+    flex-grow: 1;
+}
+.card-btn { align-self: flex-start; }
+
+.badge {
+    align-self: flex-start;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 4px 12px;
+    border-radius: 999px;
+}
+.badge-open { background-color: var(--warning-bg); color: var(--warning); }
+.badge-soon { background-color: #DBEAFE; color: var(--primary); }
+.badge-closed { background-color: var(--error-bg); color: var(--error); }
+
+/* ---------- Шаги ---------- */
+.steps {
+    display: flex;
+    gap: var(--base-gap);
+    flex-wrap: wrap;
+    margin-top: var(--base-gap);
+}
+.step {
+    flex: 1 1 280px;
+    background-color: var(--bg);
+    border-radius: var(--radius);
+    padding: 24px;
+}
+.step-num {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--primary);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Montserrat", Arial, sans-serif;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+.step p:not(.step-num) {
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin-top: 8px;
+}
+
+/* ---------- CTA ---------- */
+.cta-strip {
+    background-color: var(--accent);
+    color: var(--white);
+    padding: var(--section-gap) 0;
+}
+.cta-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--base-gap);
+    flex-wrap: wrap;
+}
+
+/* ---------- Заглушки ---------- */
+.stub-section { padding: 64px 0; }
+.stub-note { color: var(--text-secondary); margin: 12px 0 24px; }
+
+/* ---------- Подвал ---------- */
+.site-footer {
+    background-color: var(--primary-active);
+    color: var(--white);
+    padding: 40px 0;
+    margin-top: var(--section-gap);
+}
+.footer-inner {
+    display: flex;
+    gap: var(--section-gap);
+    flex-wrap: wrap;
+}
+.footer-col { flex: 1 1 240px; }
+.footer-logo {
+    font-family: "Montserrat", Arial, sans-serif;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+.footer-note { font-size: 13px; color: #BFDBFE; margin-top: 4px; }
+.footer-nav ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.footer-nav a { color: var(--white); text-decoration: none; font-size: 14px; }
+.footer-nav a:hover { text-decoration: underline; }
+
+/* ---------- Бургер-меню ---------- */
+.burger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    margin-left: auto;
+}
+.burger span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background-color: var(--white);
+}
+.burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.burger.open span:nth-child(2) { opacity: 0; }
+.burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ============================================================
+   Адаптивность: 1024, 768, 360 (точки из UI-kit)
+   ============================================================ */
+@media (max-width: 1024px) {
+    .container { padding: 0 32px; }
+    .hero-inner { flex-direction: column; align-items: flex-start; }
+    .hero-card { width: 100%; max-width: 480px; }
+}
+
+@media (max-width: 768px) {
+    .cards-grid { flex-direction: row; }
+    .tournament-card { flex: 1 1 40%; }
+    .site-nav {
+        display: none;
+        position: absolute;
+        top: 68px;
+        left: 0;
+        right: 0;
+        background-color: var(--primary);
+        padding: 16px 32px;
+        z-index: 10;
+    }
+    .site-nav.open { display: block; }
+    .site-nav ul { flex-direction: column; gap: 4px; }
+    .header-actions { display: none; }
+    .burger { display: flex; }
+    .site-header { position: relative; }
+}
+
+@media (max-width: 480px) {
+    .container { padding: 0 16px; }
+    h1 { font-size: 26px; }
+    h2 { font-size: 20px; }
+    .hero { padding: 48px 0 56px; }
+    .hero-actions .btn { width: 100%; }
+    .tournament-card { flex: 1 1 100%; }
+    .steps { flex-direction: column; }
+    .cta-inner { flex-direction: column; align-items: flex-start; }
+    .cta-inner .btn { width: 100%; }
+    .section-head { flex-direction: column; gap: 8px; }
+}
