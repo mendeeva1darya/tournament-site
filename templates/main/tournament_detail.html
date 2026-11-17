@@ -1,0 +1,61 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}{{ tournament.title }} — АФЛ{% endblock %}
+
+{% block content %}
+<header class="detail-hero">
+  <div class="container">
+    <p class="hero-kicker">{{ tournament.city }} · {{ tournament.get_format_display }}</p>
+    <h1>{{ tournament.title }}</h1>
+    <a class="btn btn-primary" href="{% url 'main:application_form' %}">Подать заявку на участие</a>
+  </div>
+</header>
+
+<section class="section">
+  <div class="container detail-grid">
+    <div>
+      <h2>Описание</h2>
+      <p>{{ tournament.description }}</p>
+      <div class="table-wrap">
+        <h2 style="margin-top: 32px;">Турнирная таблица</h2>
+        <table class="table">
+          <thead>
+            <tr><th>№</th><th>Команда</th><th>Игры</th><th>В</th><th>Н</th><th>П</th><th>ЗМ</th><th>ПМ</th><th>±</th><th>Очки</th></tr>
+          </thead>
+          <tbody>
+            {% for team in teams %}
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td>{{ team.name }}</td>
+              <td>{{ team.games }}</td>
+              <td>{{ team.wins }}</td>
+              <td>{{ team.draws }}</td>
+              <td>{{ team.losses }}</td>
+              <td>{{ team.goals_for }}</td>
+              <td>{{ team.goals_against }}</td>
+              <td>{{ team.goals_diff }}</td>
+              <td><b>{{ team.points }}</b></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="10">Таблица заполнится после первых матчей.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <aside class="detail-info">
+      <h2>Детали</h2>
+      <ul class="detail-list">
+        <li><span>Старт</span><b>{{ tournament.start_date|date:"d.m.Y" }}</b></li>
+        <li><span>Приём заявок до</span><b>{{ tournament.registration_deadline|date:"d.m.Y" }}</b></li>
+        <li><span>Город</span><b>{{ tournament.city }}</b></li>
+        <li><span>Формат</span><b>{{ tournament.get_format_display }}</b></li>
+        <li><span>Участников</span><b>{{ tournament.teams_count }} из {{ tournament.max_teams }}</b></li>
+        <li><span>Свободных мест</span><b>{{ tournament.free_slots }}</b></li>
+        {% if tournament.prize_fund %}<li><span>Призовой фонд</span><b>{{ tournament.prize_fund }}</b></li>{% endif %}
+      </ul>
+    </aside>
+  </div>
+</section>
+{% endblock %}

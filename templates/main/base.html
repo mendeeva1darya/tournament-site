@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Любительская футбольная лига{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="logo" href="{% url 'main:index' %}">
+      <span class="logo-mark">АФЛ</span>
+      <span class="logo-text">Любительская футбольная лига</span>
+    </a>
+    <nav class="site-nav" id="site-nav">
+      <a href="{% url 'main:index' %}">Главная</a>
+      <a href="{% url 'main:catalog' %}">Турниры</a>
+      <a href="{% url 'main:application_form' %}">Подать заявку</a>
+      <a href="{% url 'main:profile' %}">Личный кабинет</a>
+      <a href="{% url 'main:about' %}">О проекте</a>
+    </nav>
+    <form class="header-search" action="{% url 'main:search' %}" method="get">
+      <input type="search" name="q" placeholder="Поиск турниров" aria-label="Поиск">
+      <button type="submit">Найти</button>
+    </form>
+    <button class="burger" id="burger" aria-label="Открыть меню" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main>
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <p>© 2026 Любительская футбольная лига, Ульяновск</p>
+    <nav class="footer-nav">
+      <a href="{% url 'main:catalog' %}">Турниры</a>
+      <a href="{% url 'main:application_form' %}">Подать заявку</a>
+      <a href="{% url 'main:about' %}">О проекте</a>
+    </nav>
+  </div>
+</footer>
+<script src="{% static 'js/main.js' %}" defer></script>
+</body>
+</html>

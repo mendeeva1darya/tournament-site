@@ -1,0 +1,27 @@
+{% extends "main/base.html" %}
+
+{% block title %}Поиск — АФЛ{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <h1>Поиск турниров</h1>
+    <form class="filters" method="get" action="{% url 'main:search' %}">
+      <input class="search-input" type="search" name="q" value="{{ query }}" placeholder="Название, город или слово из описания" aria-label="Поиск">
+      <button class="btn btn-primary" type="submit">Найти</button>
+    </form>
+    {% if query %}
+      <p class="card-meta">По запросу «{{ query }}» найдено: {{ results|length }}</p>
+      <div class="cards-grid">
+        {% for tournament in results|slice:":20" %}
+          {% include "main/_tournament_card.html" %}
+        {% empty %}
+          <p>Ничего не нашлось. Попробуйте другое слово — например, «Кубок» или «Ульяновск».</p>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>Введите запрос в строку поиска — найдём турнир по названию, городу или описанию.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

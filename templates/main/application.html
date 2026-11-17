@@ -1,0 +1,32 @@
+{% extends "main/base.html" %}
+
+{% block title %}Заявка на участие — АФЛ{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container narrow">
+    <h1>Заявка на участие</h1>
+    <p>Заполните форму — организатор свяжется с капитаном в течение двух дней.</p>
+    <form class="form" method="post" action="">
+      {% csrf_token %}
+      <label for="id_team">Название команды</label>
+      <input type="text" id="id_team" name="team" required maxlength="100">
+      <label for="id_tournament">Турнир</label>
+      <select id="id_tournament" name="tournament" required>
+        {% for tournament in tournaments %}
+          <option value="{{ tournament.pk }}">{{ tournament.title }} · {{ tournament.city }}</option>
+        {% empty %}
+          <option value="">Пока нет активных турниров</option>
+        {% endfor %}
+      </select>
+      <label for="id_captain">Капитан</label>
+      <input type="text" id="id_captain" name="captain" required maxlength="100">
+      <label for="id_phone">Телефон капитана</label>
+      <input type="tel" id="id_phone" name="phone" required placeholder="+7 (___) ___-__-__">
+      <label for="id_players">Сколько игроков</label>
+      <input type="number" id="id_players" name="players" min="8" max="20" required>
+      <button class="btn btn-primary" type="submit">Отправить заявку</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

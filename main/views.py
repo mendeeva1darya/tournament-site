@@ -1,36 +1,70 @@
-"""Представления занятия 7: главная страница и заглушки будущих разделов."""
-from django.shortcuts import render
+from django.core.paginator import Paginator
+from django.db.models import Q
+from django.shortcuts import get_object_or_404, render
+
+from .models import Team, Tournament
 
 
-def home(request):
-    """Главная страница по макету desktop 1440 / mobile 375 (рисунок 6.1 отчёта 6)."""
-    return render(request, "main/index.html")
+def index(request):
+    context = {
+        "tournaments": Tournament.objects.filter(is_active=True)[:6],
+        "top_teams": Team.objects.select_related("tournament").order_by("-points", "-goals_for")[:4],
+    }
+    return render(request, "main/index.html", context)
 
 
-# Заглушки разделов: сверстаются на занятии 8 по wireframes из отчёта 6
-def tournaments(request):
-    return render(request, "main/stub.html", {"title": "Турниры"})
+def tournament_catalog(request):
+    tournaments = Tournament.objects.filter(is_active=True)
+    selected_city = request.GET.get("city", "")
+    selected_format = request.GET.get("format", "")
+    if selected_city:
+        tournaments = tournaments.filter(city=selected_city)
+    if selected_format:
+        tournaments = tournaments.filter(format=selected_format)
+
+    cities = (
+        Tournament.objects.order_by("city")
+        .values_list("city", flat=True)
+        .distinct()
+    )
+    paginator = Paginator(tournaments, 20)
+    page = paginator.get_page(request.GET.get("page"))
+
+    context = {
+        "page_obj": page,
+        "cities": cities,
+        "selected_city": selected_city,
+        "selected_format": selected_format,
+    }
+    return render(request, "main/catalog.html", context)
 
 
-def standings(request):
-    return render(request, "main/stub.html", {"title": "Турнирная таблица"})
+def tournament_detail(request, slug):
+    tournament = get_object_or_404(Tournament, slug=slug, is_active=True)
+    teams = tournament.teams.all()
+    return render(request, "main/tournament_detail.html", {"tournament": tournament, "teams": teams})
 
 
-def teams(request):
-    return render(request, "main/stub.html", {"title": "Команды"})
+def application_form(request):
+    context = {"tournaments": Tournament.objects.filter(is_active=True)}
+    return render(request, "main/application.html", context)
 
 
-def news(request):
-    return render(request, "main/stub.html", {"title": "Новости"})
+def profile(request):
+    return render(request, "main/profile.html")
 
 
 def about(request):
-    return render(request, "main/stub.html", {"title": "О проекте"})
+    return render(request, "main/about.html")
 
 
-def login_view(request):
-    return render(request, "main/stub.html", {"title": "Вход"})
-
-
-def register(request):
-    return render(request, "main/stub.html", {"title": "Регистрация"})
+def search(request):
+    query = request.GET.get("q", "").strip()
+    results = []
+    if query:
+        results = Tournament.objects.filter(
+            Q(title__icontains=query)
+            | Q(city__icontains=query)
+            | Q(description__icontains=query)
+        )
+    return render(request, "main/search.html", {"query": query, "results": results})

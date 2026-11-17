@@ -1,0 +1,47 @@
+{% extends "main/base.html" %}
+
+{% block title %}Каталог турниров — АФЛ{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <h1>Каталог турниров</h1>
+    <form class="filters" method="get">
+      <select name="city" aria-label="Город">
+        <option value="">Все города</option>
+        {% for city in cities %}
+          <option value="{{ city }}" {% if city == selected_city %}selected{% endif %}>{{ city }}</option>
+        {% endfor %}
+      </select>
+      <select name="format" aria-label="Формат">
+        <option value="">Все форматы</option>
+        <option value="5x5" {% if selected_format == "5x5" %}selected{% endif %}>5 на 5</option>
+        <option value="8x8" {% if selected_format == "8x8" %}selected{% endif %}>8 на 8</option>
+        <option value="11x11" {% if selected_format == "11x11" %}selected{% endif %}>11 на 11</option>
+      </select>
+      <button class="btn btn-primary" type="submit">Применить</button>
+      {% if selected_city or selected_format %}
+        <a class="btn btn-outline btn-dark-text" href="{% url 'main:catalog' %}">Сбросить</a>
+      {% endif %}
+    </form>
+    <div class="cards-grid">
+      {% for tournament in page_obj %}
+        {% include "main/_tournament_card.html" %}
+      {% empty %}
+        <p>По выбранным фильтрам ничего не нашлось — попробуйте сбросить фильтры.</p>
+      {% endfor %}
+    </div>
+    {% if page_obj.has_other_pages %}
+    <nav class="pagination" aria-label="Страницы каталога">
+      {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}">← Назад</a>
+      {% endif %}
+      <span>Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Дальше →</a>
+      {% endif %}
+    </nav>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

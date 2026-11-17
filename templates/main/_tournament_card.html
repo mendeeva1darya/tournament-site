@@ -1,0 +1,21 @@
+{% load static %}
+<article class="card tournament-card">
+  <a class="card-link" href="{% url 'main:tournament_detail' tournament.slug %}">
+    <div class="card-media">
+      {% if tournament.cover %}
+        <img src="{{ tournament.cover.url }}" width="640" height="360" loading="lazy" alt="Обложка турнира «{{ tournament.title }}»">
+      {% else %}
+        <div class="card-fallback" role="img" aria-label="Обложка турнира «{{ tournament.title }}»"></div>
+      {% endif %}
+    </div>
+    <div class="card-body">
+      <p class="card-tags">
+        <span class="tag">{{ tournament.get_format_display }}</span>
+        <span class="tag tag-muted">{{ tournament.city }}</span>
+      </p>
+      <h3>{{ tournament.title }}</h3>
+      <p class="card-meta">Старт: {{ tournament.start_date|date:"d.m.Y" }} · {{ tournament.teams_count }}/{{ tournament.max_teams }} команд</p>
+      <p class="card-desc">{{ tournament.description|truncatechars:110 }}</p>
+    </div>
+  </a>
+</article>
