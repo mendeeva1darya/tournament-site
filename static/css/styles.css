@@ -146,3 +146,12 @@ h1, h2, h3 { line-height: 1.2; margin-bottom: 12px; }
   .hero h1 { font-size: 24px; }
   .btn { width: 100%; text-align: center; }
 }
+
+/* ==== Формы с ошибками и страница успеха ==== */
+.form-error { color: var(--danger); font-size: 14px; margin-top: 4px; }
+.form select { background: #fff; }
+.success-box { background: var(--card); border-radius: var(--radius); padding: 32px; box-shadow: var(--shadow); margin-top: 24px; }
+.success-box .btn { margin-top: 16px; }
+.status-new { background: #fff4dd; color: #9a6a00; }
+.status-accepted { background: #e2f6e6; color: #1e7a34; }
+.status-rejected { background: #fde3e4; color: var(--danger); }
