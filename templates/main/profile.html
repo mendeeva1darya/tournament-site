@@ -6,20 +6,29 @@
 <section class="section">
   <div class="container">
     <h1>Личный кабинет</h1>
-    <p>Вход и регистрация появятся на следующем занятии — заготовки уже готовы.</p>
-    <div class="cards-grid">
-      <article class="card card-body">
-        <h3>Мои заявки</h3>
-        <p class="card-meta">Здесь будут заявки вашей команды и их статусы.</p>
-      </article>
-      <article class="card card-body">
-        <h3>Мои турниры</h3>
-        <p class="card-meta">Календарь матчей и место команды в таблице.</p>
-      </article>
-      <article class="card card-body">
-        <h3>Профиль капитана</h3>
-        <p class="card-meta">Контакты, состав и документы команды.</p>
-      </article>
+    <p>Вход и регистрация — на следующих занятиях. А пока здесь видны последние заявки, поданные через сайт.</p>
+    <div class="table-wrap">
+      {% if applications %}
+      <table class="table">
+        <thead>
+          <tr><th>Команда</th><th>Турнир</th><th>Капитан</th><th>Игроков</th><th>Статус</th><th>Подана</th></tr>
+        </thead>
+        <tbody>
+          {% for app in applications %}
+          <tr>
+            <td>{{ app.team_name }}</td>
+            <td><a href="{% url 'main:tournament_detail' app.tournament.slug %}">{{ app.tournament.title }}</a></td>
+            <td>{{ app.captain }}</td>
+            <td>{{ app.players_count }}</td>
+            <td><span class="tag status-{{ app.status }}">{{ app.get_status_display }}</span></td>
+            <td>{{ app.created_at|date:"d.m.Y H:i" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p>Заявок пока нет. Подайте первую через <a href="{% url 'main:application_form' %}">форму заявки</a> — она появится здесь.</p>
+      {% endif %}
     </div>
   </div>
 </section>

@@ -9,22 +9,14 @@
     <p>Заполните форму — организатор свяжется с капитаном в течение двух дней.</p>
     <form class="form" method="post" action="">
       {% csrf_token %}
-      <label for="id_team">Название команды</label>
-      <input type="text" id="id_team" name="team" required maxlength="100">
-      <label for="id_tournament">Турнир</label>
-      <select id="id_tournament" name="tournament" required>
-        {% for tournament in tournaments %}
-          <option value="{{ tournament.pk }}">{{ tournament.title }} · {{ tournament.city }}</option>
-        {% empty %}
-          <option value="">Пока нет активных турниров</option>
-        {% endfor %}
-      </select>
-      <label for="id_captain">Капитан</label>
-      <input type="text" id="id_captain" name="captain" required maxlength="100">
-      <label for="id_phone">Телефон капитана</label>
-      <input type="tel" id="id_phone" name="phone" required placeholder="+7 (___) ___-__-__">
-      <label for="id_players">Сколько игроков</label>
-      <input type="number" id="id_players" name="players" min="8" max="20" required>
+      {% for field in form %}
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% for error in field.errors %}<p class="form-error">{{ error }}</p>{% endfor %}
+      {% endfor %}
+      {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}<p class="form-error">{{ error }}</p>{% endfor %}
+      {% endif %}
       <button class="btn btn-primary" type="submit">Отправить заявку</button>
     </form>
   </div>

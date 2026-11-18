@@ -1,8 +1,9 @@
 from django.core.paginator import Paginator
 from django.db.models import Q
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 
-from .models import Team, Tournament
+from .forms import ApplicationForm
+from .models import Application, Team, Tournament
 
 
 def index(request):
@@ -46,12 +47,26 @@ def tournament_detail(request, slug):
 
 
 def application_form(request):
-    context = {"tournaments": Tournament.objects.filter(is_active=True)}
-    return render(request, "main/application.html", context)
+    if request.method == "POST":
+        form = ApplicationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("main:application_success")
+    else:
+        form = ApplicationForm()
+    return render(request, "main/application.html", {"form": form})
+
+
+def application_success(request):
+    return render(request, "main/application_success.html")
 
 
 def profile(request):
-    return render(request, "main/profile.html")
+    applications = (
+        Application.objects.select_related("tournament")
+        .order_by("-created_at")[:10]
+    )
+    return render(request, "main/profile.html", {"applications": applications})
 
 
 def about(request):

@@ -1,0 +1,13 @@
+{% extends "main/base.html" %}
+
+{% block title %}Заявка принята — АФЛ{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container narrow success-box">
+    <h1>Заявка принята 🎉</h1>
+    <p>Организатор свяжется с капитаном в течение двух дней. Статус заявки можно смотреть в <a href="{% url 'main:profile' %}">личном кабинете</a>.</p>
+    <a class="btn btn-primary" href="{% url 'main:catalog' %}">Вернуться к турнирам</a>
+  </div>
+</section>
+{% endblock %}
