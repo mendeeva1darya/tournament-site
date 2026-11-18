@@ -13,7 +13,8 @@
         <span class="tag">{{ tournament.get_format_display }}</span>
         <span class="tag tag-muted">{{ tournament.city }}</span>
       </p>
-      <h3>{{ tournament.title }}</h3>
+      <h2>{{ tournament.title }}</h2>
+
       <p class="card-meta">Старт: {{ tournament.start_date|date:"d.m.Y" }} · {{ tournament.teams_count }}/{{ tournament.max_teams }} команд</p>
       <p class="card-desc">{{ tournament.description|truncatechars:110 }}</p>
     </div>
