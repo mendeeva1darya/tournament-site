@@ -68,3 +68,29 @@ class Team(models.Model):
     def goals_diff(self):
         diff = self.goals_for - self.goals_against
         return f"+{diff}" if diff > 0 else str(diff)
+
+
+class Application(models.Model):
+    class Status(models.TextChoices):
+        NEW = "new", "На модерации"
+        ACCEPTED = "accepted", "Принята"
+        REJECTED = "rejected", "Отклонена"
+
+    tournament = models.ForeignKey(
+        Tournament, on_delete=models.CASCADE,
+        related_name="applications", verbose_name="Турнир",
+    )
+    team_name = models.CharField("Название команды", max_length=100)
+    captain = models.CharField("Капитан", max_length=100)
+    phone = models.CharField("Телефон капитана", max_length=20)
+    players_count = models.PositiveSmallIntegerField("Игроков в заявке", default=8)
+    status = models.CharField("Статус", max_length=10, choices=Status.choices, default=Status.NEW)
+    created_at = models.DateTimeField("Подана", auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Заявка"
+        verbose_name_plural = "Заявки"
+
+    def __str__(self):
+        return f"{self.team_name} → {self.tournament.title}"
