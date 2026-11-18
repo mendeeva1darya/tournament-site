@@ -11,21 +11,4 @@
 - `seed.py` — скрипт с тестовыми данными (20 турниров, команды с очками)
 - `db.sqlite3` — база данных (в git не входит)
 
-## Запуск
 
-1. Создать и активировать виртуальное окружение:
-   ```
-   python -m venv venv
-   .\venv\Scripts\Activate.ps1
-   ```
-2. Установить зависимости: `pip install -r requirements.txt`
-3. Применить миграции:
-   ```
-   python manage.py makemigrations main
-   python manage.py migrate
-   ```
-4. Наполнить базу тестовыми данными: `python seed.py`
-5. Создать администратора: `python manage.py createsuperuser`
-6. Запустить сервер: `python manage.py runserver`
-
-Сайт: http://127.0.0.1:8000 · Админка: http://127.0.0.1:8000/admin/
