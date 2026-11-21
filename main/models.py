@@ -1,5 +1,6 @@
 
 from django.conf import settings
+from django.core.validators import MinValueValidator
 from django.db import models
 
 
@@ -131,10 +132,14 @@ class Application(models.Model):
         "Телефон капитана",
         max_length=20,
     )
+
+    # BUG-03: запрещаем 0 и отрицательное количество игроков
     players_count = models.PositiveSmallIntegerField(
         "Игроков в заявке",
         default=8,
+        validators=[MinValueValidator(1)],
     )
+
     status = models.CharField(
         "Статус",
         max_length=10,
