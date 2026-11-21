@@ -18,6 +18,7 @@ def index(request):
             "tournament"
         ).order_by("-points", "-goals_for")[:4],
     }
+
     return render(request, "main/index.html", context)
 
 
@@ -96,10 +97,7 @@ def application_form(request):
                 )
             else:
                 application.save()
-
-                # BUG-07: разрешаем открыть страницу подтверждения
-                # только после успешной отправки заявки
-                request.session["application_submitted"] = True
+                request.session["application_success"] = True
 
                 return redirect("main:application_success")
 
@@ -114,8 +112,11 @@ def application_form(request):
 
 
 def application_success(request):
-    # BUG-07: запрещаем открывать подтверждение напрямую
-    if not request.session.pop("application_submitted", False):
+    # BUG-07: страница доступна только после отправки заявки
+    if not request.user.is_authenticated:
+        return redirect("main:login")
+
+    if not request.session.pop("application_success", False):
         return redirect("main:application_form")
 
     return render(
@@ -153,7 +154,8 @@ def search(request):
         # BUG-04: поиск без учёта регистра русских букв
         normalized_query = query.casefold()
 
-        tournaments = Tournament.objects.all()
+        # BUG-08: показываем только активные турниры
+        tournaments = Tournament.objects.filter(is_active=True)
 
         results = [
             tournament
