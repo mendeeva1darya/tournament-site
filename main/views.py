@@ -1,8 +1,8 @@
+
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.core.paginator import Paginator
-from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import ApplicationForm
@@ -141,11 +141,21 @@ def search(request):
     results = []
 
     if query:
-        results = Tournament.objects.filter(
-            Q(title__icontains=query)
-            | Q(city__icontains=query)
-            | Q(description__icontains=query)
-        )
+        # BUG-04: поиск без учёта регистра русских букв
+        normalized_query = query.casefold()
+
+        tournaments = Tournament.objects.all()
+
+        results = [
+            tournament
+            for tournament in tournaments
+            if (
+                normalized_query in tournament.title.casefold()
+                or normalized_query in tournament.city.casefold()
+                or normalized_query
+                in (tournament.description or "").casefold()
+            )
+        ]
 
     return render(
         request,
