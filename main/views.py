@@ -96,6 +96,11 @@ def application_form(request):
                 )
             else:
                 application.save()
+
+                # BUG-07: разрешаем открыть страницу подтверждения
+                # только после успешной отправки заявки
+                request.session["application_submitted"] = True
+
                 return redirect("main:application_success")
 
     else:
@@ -109,6 +114,10 @@ def application_form(request):
 
 
 def application_success(request):
+    # BUG-07: запрещаем открывать подтверждение напрямую
+    if not request.session.pop("application_submitted", False):
+        return redirect("main:application_form")
+
     return render(
         request,
         "main/application_success.html",
