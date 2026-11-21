@@ -1,4 +1,3 @@
-
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
@@ -81,9 +80,23 @@ def application_form(request):
         if form.is_valid():
             application = form.save(commit=False)
             application.user = request.user
-            application.save()
 
-            return redirect("main:application_success")
+            # BUG-02: проверка повторной заявки
+            duplicate_exists = Application.objects.filter(
+                user=request.user,
+                tournament=application.tournament,
+                team_name__iexact=application.team_name.strip(),
+            ).exists()
+
+            if duplicate_exists:
+                form.add_error(
+                    None,
+                    "Вы уже подали заявку от этой команды "
+                    "на данный турнир."
+                )
+            else:
+                application.save()
+                return redirect("main:application_success")
 
     else:
         form = ApplicationForm()
