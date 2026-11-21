@@ -1,3 +1,7 @@
+
+from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
@@ -8,26 +12,35 @@ from .models import Application, Team, Tournament
 
 def index(request):
     context = {
-        "tournaments": Tournament.objects.filter(is_active=True)[:6],
-        "top_teams": Team.objects.select_related("tournament").order_by("-points", "-goals_for")[:4],
+        "tournaments": Tournament.objects.filter(
+            is_active=True
+        )[:6],
+        "top_teams": Team.objects.select_related(
+            "tournament"
+        ).order_by("-points", "-goals_for")[:4],
     }
     return render(request, "main/index.html", context)
 
 
 def tournament_catalog(request):
     tournaments = Tournament.objects.filter(is_active=True)
+
     selected_city = request.GET.get("city", "")
     selected_format = request.GET.get("format", "")
+
     if selected_city:
         tournaments = tournaments.filter(city=selected_city)
+
     if selected_format:
         tournaments = tournaments.filter(format=selected_format)
 
     cities = (
-        Tournament.objects.order_by("city")
+        Tournament.objects
+        .order_by("city")
         .values_list("city", flat=True)
         .distinct()
     )
+
     paginator = Paginator(tournaments, 20)
     page = paginator.get_page(request.GET.get("page"))
 
@@ -37,36 +50,72 @@ def tournament_catalog(request):
         "selected_city": selected_city,
         "selected_format": selected_format,
     }
+
     return render(request, "main/catalog.html", context)
 
 
 def tournament_detail(request, slug):
-    tournament = get_object_or_404(Tournament, slug=slug, is_active=True)
+    tournament = get_object_or_404(
+        Tournament,
+        slug=slug,
+        is_active=True,
+    )
+
     teams = tournament.teams.all()
-    return render(request, "main/tournament_detail.html", {"tournament": tournament, "teams": teams})
+
+    return render(
+        request,
+        "main/tournament_detail.html",
+        {
+            "tournament": tournament,
+            "teams": teams,
+        },
+    )
 
 
+@login_required(login_url="main:login")
 def application_form(request):
     if request.method == "POST":
         form = ApplicationForm(request.POST)
+
         if form.is_valid():
-            form.save()
+            application = form.save(commit=False)
+            application.user = request.user
+            application.save()
+
             return redirect("main:application_success")
+
     else:
         form = ApplicationForm()
-    return render(request, "main/application.html", {"form": form})
+
+    return render(
+        request,
+        "main/application.html",
+        {"form": form},
+    )
 
 
 def application_success(request):
-    return render(request, "main/application_success.html")
+    return render(
+        request,
+        "main/application_success.html",
+    )
 
 
+@login_required(login_url="main:login")
 def profile(request):
     applications = (
-        Application.objects.select_related("tournament")
+        Application.objects
+        .filter(user=request.user)
+        .select_related("tournament")
         .order_by("-created_at")[:10]
     )
-    return render(request, "main/profile.html", {"applications": applications})
+
+    return render(
+        request,
+        "main/profile.html",
+        {"applications": applications},
+    )
 
 
 def about(request):
@@ -75,11 +124,44 @@ def about(request):
 
 def search(request):
     query = request.GET.get("q", "").strip()
+
     results = []
+
     if query:
         results = Tournament.objects.filter(
             Q(title__icontains=query)
             | Q(city__icontains=query)
             | Q(description__icontains=query)
         )
-    return render(request, "main/search.html", {"query": query, "results": results})
+
+    return render(
+        request,
+        "main/search.html",
+        {
+            "query": query,
+            "results": results,
+        },
+    )
+
+
+def register(request):
+    if request.user.is_authenticated:
+        return redirect("main:profile")
+
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+
+            return redirect("main:profile")
+
+    else:
+        form = UserCreationForm()
+
+    return render(
+        request,
+        "main/register.html",
+        {"form": form},
+    )
